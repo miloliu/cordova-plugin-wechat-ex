@@ -62,3 +62,24 @@ exports.ShareType = {
     video: 6,
     webpage: 7
 };
+
+exports.auth = function(userId) {
+    cordova
+        .exec(function () {
+            if (promise) {
+                promise.resolve();
+            } else if (onfulfilled) {
+                onfulfilled();
+            }
+        }, function (err) {
+            if (promise) {
+                promise.reject(err);
+            } else if (onrejected) {
+                onrejected(err);
+            }
+        }, 'WeChat', 'auth', [
+            {
+                userId: userId
+            }
+        ]);
+};

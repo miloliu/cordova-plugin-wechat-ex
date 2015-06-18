@@ -189,7 +189,8 @@ const int SCENE_TIMELINE = 2;
     
     CDVPluginResult* result = nil;
     
-    if([resp isKindOfClass:[SendMessageToWXResp class]]) {
+    if([resp isKindOfClass:[SendMessageToWXResp class]] ||
+        [resp isKindOfClass:[SendAuthResp class]]) {
         switch (resp.errCode) {
             case WXSuccess:
                 result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -215,6 +216,10 @@ const int SCENE_TIMELINE = 2;
         }
     }
     
+    if([resp isKindOfClass:[SendAuthResp class]]) {
+        
+    }
+    
     [self.commandDelegate sendPluginResult:result callbackId:self.currentCallbackId];
     
     self.currentCallbackId = nil;
@@ -226,6 +231,19 @@ const int SCENE_TIMELINE = 2;
     if ([url isKindOfClass:[NSURL class]] && [url.scheme isEqualToString:self.wechatAppId]) {
         [WXApi handleOpenURL:url delegate:self];
     }
+}
+
+#pragma mark - auth
+- (void)auth: (NSString*) userId
+{
+    SendAuthReq* req = [[[SendAuthReq alloc] init] autorelease];
+    req.scope = @"snsapi_message,snsapi_userinfo,snsapi_friend,snsapi_contact"; // @"post_timeline,sns"
+    req.state = @"xxx";
+    
+    NSString* appId = [[self.commandDelegate settings] objectForKey:WECHAT_APPID_KEY];
+    req.openID = [appId stringByAppendingString:userId];
+    
+    [WXApi sendAuthReq:req];
 }
 
 @end
