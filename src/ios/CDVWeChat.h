@@ -29,6 +29,6 @@ enum CDVWeChatShareType {
 - (void)share:(CDVInvokedUrlCommand *)command;
 
 #pragma mark - auth
-- (void)auth: (NSString*) userId;
+- (void)auth:(CDVInvokedUrlCommand *)command;
 
 @end

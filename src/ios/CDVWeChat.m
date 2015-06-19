@@ -234,16 +234,33 @@ const int SCENE_TIMELINE = 2;
 }
 
 #pragma mark - auth
-- (void)auth: (NSString*) userId
+- (void)auth: (CDVInvokedUrlCommand *)command;
 {
-    SendAuthReq* req = [[[SendAuthReq alloc] init] autorelease];
-    req.scope = @"snsapi_message,snsapi_userinfo,snsapi_friend,snsapi_contact"; // @"post_timeline,sns"
-    req.state = @"xxx";
+    CDVPluginResult* result = nil;
     
-    NSString* appId = [[self.commandDelegate settings] objectForKey:WECHAT_APPID_KEY];
-    req.openID = [appId stringByAppendingString:userId];
+    if (![WXApi isWXAppInstalled]) {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_WECHAT_NOT_INSTALLED];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+        return ;
+    }
     
-    [WXApi sendAuthReq:req];
+    NSDictionary* params = [command.arguments objectAtIndex:0];
+    if (!params) {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_INVALID_OPTIONS];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+        return ;
+    }
+    if ([params objectForKey:@"userId"]) {
+        NSString* userId = [params objectForKey:@"userId"];
+        SendAuthReq* req = [SendAuthReq new];
+        req.scope = @"snsapi_message,snsapi_userinfo,snsapi_friend,snsapi_contact"; // @"post_timeline,sns"
+        req.state = @"xxx";
+    
+        NSString* appId = [[self.commandDelegate settings] objectForKey:WECHAT_APPID_KEY];
+        req.openID = [appId stringByAppendingString:userId];
+    
+        [WXApi sendReq:req];
+    }
 }
 
 @end

@@ -63,7 +63,13 @@ exports.ShareType = {
     webpage: 7
 };
 
-exports.auth = function(userId) {
+exports.auth = function(userId, onfulfilled, onrejected) {
+    var ThenFail = window.ThenFail;
+    var promise;
+
+    if (ThenFail && !onfulfilled && !onrejected) {
+        promise = new ThenFail();
+    }
     cordova
         .exec(function () {
             if (promise) {
@@ -82,4 +88,6 @@ exports.auth = function(userId) {
                 userId: userId
             }
         ]);
+        
+     return promise;
 };
