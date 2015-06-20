@@ -31,6 +31,7 @@ const int SCENE_TIMELINE = 2;
 
 - (void)pluginInitialize {
     NSString* appId = [[self.commandDelegate settings] objectForKey:WECHAT_APPID_KEY];
+    self.wechatAppId = appId;
     [WXApi registerApp: appId];
 }
 
@@ -182,6 +183,12 @@ const int SCENE_TIMELINE = 2;
     return [NSData dataWithContentsOfURL:url];
 }
 
+-(void) onReq:(BaseReq*)req {
+    if ([req isKindOfClass:[SendAuthReq class]]) {
+        
+    }
+}
+
 - (void)onResp:(BaseResp*)resp {
     if (!self.currentCallbackId) {
         return;
@@ -217,7 +224,11 @@ const int SCENE_TIMELINE = 2;
     }
     
     if([resp isKindOfClass:[SendAuthResp class]]) {
-        
+        if (resp.errCode == WXSuccess) {
+                SendAuthResp *authRes = (SendAuthResp*)resp;
+                NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:authRes.code,@"code",authRes.state,@"state",nil];
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
+        }
     }
     
     [self.commandDelegate sendPluginResult:result callbackId:self.currentCallbackId];
@@ -237,6 +248,7 @@ const int SCENE_TIMELINE = 2;
 - (void)auth: (CDVInvokedUrlCommand *)command;
 {
     CDVPluginResult* result = nil;
+    self.currentCallbackId = command.callbackId;
     
     if (![WXApi isWXAppInstalled]) {
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_WECHAT_NOT_INSTALLED];

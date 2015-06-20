@@ -13,7 +13,7 @@ Inspired by https://github.com/xu-li/cordova-plugin-wechat
 一定不要忘记加上后面的 `--variable APP_ID=********`.
 
 ```sh
-cordova plugin add com.wordsbaking.cordova.wechat --variable APP_ID=[你的APPID]
+cordova plugin add https://github.com/miloliu/cordova-plugin-wechat-ex.git --variable APP_ID=[你的APPID]
 ```
 
 另外貌似 Cordova 的变量信息是按平台保存的, 如果安装插件时尚未添加某个平台, 即便之前加上了变量,

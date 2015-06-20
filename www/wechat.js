@@ -71,11 +71,11 @@ exports.auth = function(userId, onfulfilled, onrejected) {
         promise = new ThenFail();
     }
     cordova
-        .exec(function () {
+        .exec(function (args) {
             if (promise) {
-                promise.resolve();
+                promise.resolve(args);
             } else if (onfulfilled) {
-                onfulfilled();
+                onfulfilled(args);
             }
         }, function (err) {
             if (promise) {
