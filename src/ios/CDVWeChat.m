@@ -275,4 +275,17 @@ const int SCENE_TIMELINE = 2;
     }
 }
 
+#pragma mark - clientCheck
+- (void)isClientInstalled:(CDVInvokedUrlCommand *)command {
+    //self.currentCallbackId = command.callbackId;
+    if (![WXApi isWXAppInstalled]) {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR/* messageAsString:ERR_WECHAT_NOT_INSTALLED*/];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    }
+    else {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    }
+}
+
 @end

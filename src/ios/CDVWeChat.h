@@ -31,4 +31,6 @@ enum CDVWeChatShareType {
 #pragma mark - auth
 - (void)auth:(CDVInvokedUrlCommand *)command;
 
+#pragma mark - clientCheck
+- (void)isClientInstalled:(CDVInvokedUrlCommand *)command;
 @end

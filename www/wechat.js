@@ -91,3 +91,12 @@ exports.auth = function(userId, onfulfilled, onrejected) {
         
      return promise;
 };
+
+exports.isClientInstalled = function(installed, uninstalled) {
+    cordova
+        .exec(function () {
+            installed();
+        }, function (err) {
+            uninstalled();
+        }, 'WeChat', 'isClientInstalled', []);
+};
