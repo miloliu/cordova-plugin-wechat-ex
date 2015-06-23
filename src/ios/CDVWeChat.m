@@ -277,6 +277,7 @@ const int SCENE_TIMELINE = 2;
 
 #pragma mark - clientCheck
 - (void)isClientInstalled:(CDVInvokedUrlCommand *)command {
+    CDVPluginResult* result = nil;
     //self.currentCallbackId = command.callbackId;
     if (![WXApi isWXAppInstalled]) {
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR/* messageAsString:ERR_WECHAT_NOT_INSTALLED*/];
