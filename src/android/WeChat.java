@@ -72,6 +72,8 @@ public class WeChat extends CordovaPlugin {
             throws JSONException {
         if (action.equals("share")) {
             share(args, callbackContext);
+        } else if (action.equals("isClientInstalled")) {
+            isClientInstalled(callbackContext);
         } else {
             return false;
         }
@@ -215,5 +217,21 @@ public class WeChat extends CordovaPlugin {
         }
 
         currentCallbackContext = callbackContext;
+    }
+    
+    private void isClientInstalled(CallbackContext callbackContext) {
+        try {
+            boolean check = api.isWXAppInstalled();
+            if (check) {
+                check = api.isWXAppSupportAPI();
+                if (check) {
+                    callbackContext.success();
+                    return;
+                }
+            }
+            callbackContext.error(ERR_WECHAT_NOT_INSTALLED);
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+        }
     }
 }
