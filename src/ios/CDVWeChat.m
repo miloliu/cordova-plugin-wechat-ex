@@ -180,6 +180,9 @@ const int SCENE_TIMELINE = 2;
 - (NSData*)decodeBase64:(NSString*)base64String {
     NSString* dataUrl =[NSString stringWithFormat:@"data:application/octet-stream;base64,%@", base64String];
     NSURL* url = [NSURL URLWithString: dataUrl];
+    if (url == NULL) {
+        return [[NSData data] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    }
     return [NSData dataWithContentsOfURL:url];
 }
 
