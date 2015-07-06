@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.util.Base64;
 
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.SendAuth;
 import com.tencent.mm.sdk.openapi.SendMessageToWX;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.mm.sdk.openapi.WXMediaMessage;
@@ -74,10 +75,25 @@ public class WeChat extends CordovaPlugin {
             share(args, callbackContext);
         } else if (action.equals("isClientInstalled")) {
             isClientInstalled(callbackContext);
+        } else if (action.equals("auth")) {
+            return auth(callbackContext);
         } else {
             return false;
         }
         return true;
+    }
+
+    private boolean auth (CallbackContext callbackContext) {
+        if (!api.isWXAppInstalled()) {
+            callbackContext.error(ERR_WECHAT_NOT_INSTALLED);
+            return false;
+        }
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_message,snsapi_userinfo,snsapi_friend,snsapi_contact,post_timeline";
+        req.state = "isaosao";
+        boolean res = api.sendReq(req);
+        currentCallbackContext = callbackContext;
+        return res;
     }
 
     private void share(JSONArray args, CallbackContext callbackContext)
