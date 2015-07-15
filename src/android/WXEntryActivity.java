@@ -44,7 +44,19 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
     public void onResp(BaseResp resp) {
         switch (resp.errCode) {
             case BaseResp.ErrCode.ERR_OK:
-                WeChat.currentCallbackContext.success();
+                if (resp instanceof SendAuth.Resp) {
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("code", ((SendAuth.Resp)resp).token);
+                        object.put("state", ((SendAuth.Resp)resp).state);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    PluginResult res = new PluginResult(PluginResult.Status.OK, object);
+                    WeChat.currentCallbackContext.sendPluginResult(res);
+                }
+                else
+                    WeChat.currentCallbackContext.success();
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 WeChat.currentCallbackContext.error(WeChat.ERR_USER_CANCEL);
