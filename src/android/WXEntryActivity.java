@@ -1,4 +1,4 @@
-package to.be.replaced.wxapi;
+package com.ionicframework.lovescanning967442.wxapi;
 
 import com.tencent.mm.sdk.openapi.BaseReq;
 import com.tencent.mm.sdk.openapi.BaseResp;
@@ -8,7 +8,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.tencent.mm.sdk.openapi.SendAuth;
 import com.wordsbaking.cordova.wechat.WeChat;
+
+import org.apache.cordova.PluginResult;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /*
     Cordova WeChat Plugin
