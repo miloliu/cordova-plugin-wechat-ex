@@ -6,11 +6,13 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CordovaInterface;
 
+import org.apache.cordova.LOG;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.SendAuth;
@@ -173,7 +175,7 @@ public class WeChat extends CordovaPlugin {
                         String imageUrl = messageOptions.getString("imageUrl");
                         imageObject.imageUrl = imageUrl;
                     } else if (data != null) {
-                        imageObject.imageData = Base64.decode(data, Base64.DEFAULT);
+                        imageObject.imageData = Base64.decode(data, Base64.NO_WRAP);
                     } else {
                         callbackContext.error(ERR_INVALID_OPTIONS);
                         return;
@@ -197,17 +199,20 @@ public class WeChat extends CordovaPlugin {
                 return;
             }
 
-            if (!messageOptions.isNull("title")) {
-                message.title = messageOptions.getString("title");
-            }
+            if (type != SHARE_TYPE_IMAGE) {
+                if (!messageOptions.isNull("title")) {
+                    message.title = messageOptions.getString("title");
+                }
 
-            if (!messageOptions.isNull("description")) {
-                message.description = messageOptions.getString("description");
+                if (!messageOptions.isNull("description")) {
+                    message.description = messageOptions.getString("description");
+                }
             }
 
             if (!messageOptions.isNull("thumbData")) {
                 String thumbData = messageOptions.getString("thumbData");
-                message.thumbData = Base64.decode(thumbData, Base64.DEFAULT);
+                message.thumbData = Base64.decode(thumbData, Base64.NO_WRAP);
+                //LOG.i(this.getClass().toString(), "thumbData length : " + message.thumbData.length);
             }
         } else if (text != null) {
             WXTextObject textObject = new WXTextObject();
@@ -235,7 +240,7 @@ public class WeChat extends CordovaPlugin {
 
         currentCallbackContext = callbackContext;
     }
-    
+
     private void isClientInstalled(CallbackContext callbackContext) {
         try {
             boolean check = api.isWXAppInstalled();
