@@ -169,8 +169,8 @@ public class WeChat extends CordovaPlugin {
                     break;
                 case SHARE_TYPE_IMAGE:
                     WXImageObject imageObject = new WXImageObject();
-                    String imageUrl = messageOptions.getString("imageUrl");
-                    if (imageUrl != null) {
+                    if (!messageOptions.isNull("imageUrl")) {
+                        String imageUrl = messageOptions.getString("imageUrl");
                         imageObject.imageUrl = imageUrl;
                     } else if (data != null) {
                         imageObject.imageData = Base64.decode(data, Base64.DEFAULT);
